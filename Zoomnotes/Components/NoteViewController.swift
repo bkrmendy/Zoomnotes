@@ -38,13 +38,15 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
         canvasView.drawing = note.data.drawing
         canvasView.alwaysBounceVertical = true
         
-        canvasView.isScrollEnabled = false
+        canvasView.isScrollEnabled = true
         
-        #if DEBUG
-            canvasView.allowsFingerDrawing = true
-        #else
-            canvasView.allowsFingerDrawing = false
-        #endif
+//        #if DEBUG
+//            canvasView.allowsFingerDrawing = true
+//        #else
+
+//        #endif
+        
+        canvasView.allowsFingerDrawing = false
         
         let window = parent?.view.window
         toolPicker = PKToolPicker.shared(for: window!)
@@ -63,7 +65,7 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
             for note in note.children.values {
                 let sublevel = sublevelPreview(for: note)
                 subLevelViews[note.id] = sublevel
-                self.view.addSubview(sublevel)
+                self.canvasView.addSubview(sublevel)
             }
             
             self.view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(onPreviewZoomUp(_:))))
@@ -98,6 +100,13 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        updateContentSizeForDrawing()
+        canvasView.contentOffset = CGPoint(x: 0, y: -canvasView.adjustedContentInset.top)
+    }
+    
     override var prefersHomeIndicatorAutoHidden: Bool { true }
     
     @objc func screenEdgeSwiped(_ rec: UIScreenEdgePanGestureRecognizer) {
@@ -121,7 +130,7 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
                 let noteLevelPreview = sublevelPreview(for: newLevel)
                 self.subLevelViews[newLevel.id] = noteLevelPreview
                 
-                view.addSubview(noteLevelPreview)
+                canvasView.addSubview(noteLevelPreview)
                 currentlyDraggedLevel = newLevel
             }
             
@@ -145,21 +154,23 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
     ) {
         let velocity = rec.velocity(in: self.view)
         
+        print(canvasView.contentOffset)
+        
         hasModifiedDrawing = true
         
-        let loc = rec.location(in: self.view)
-        let frame = CGRect(x: loc.x - preview.frame.width / 2,
-                            y: loc.y - preview.frame.height / 2,
-                            width: preview.frame.width,
-                            height: preview.frame.height)
+        let loc = rec.location(in: self.canvasView)
+        let relativeLoc = rec.location(in: preview)
+        let frame = CGRect(x: loc.x,
+                           y: loc.y,
+                           width: preview.frame.width,
+                           height: preview.frame.height)
+        
+        preview.frame = frame
         
         if rec.state == .changed {
             onChanged(rec)
             
-            preview.frame = frame
         } else if rec.state == .ended {
-            preview.frame = frame
-            
             // MARK: begin snippet
             /// https://www.raywenderlich.com/1860-uikit-dynamics-and-swift-tutorial-tossing-views
             
@@ -188,7 +199,8 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
     
     private func onPreviewZoomDown(_ rec: ZNPinchGestureRecognizer, _ note: NoteModel.NoteLevel) {
         if rec.state == .began {
-            self.zoomOffset = distance(from: view.bounds, to: note.frame)
+            self.zoomOffset = CGPoint(x: view.bounds.midX - canvasView.contentOffset.x - note.frame.midX,
+                                      y: view.bounds.midY - note.frame.midY)
         }
         
         if rec.state == .changed {
@@ -239,6 +251,18 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    private func updateContentSizeForDrawing() {
+        let drawing = canvasView.drawing
+        let contentHeight: CGFloat
+    
+        if !drawing.bounds.isNull {
+            contentHeight = max(canvasView.bounds.height, (drawing.bounds.maxY * 1.2) * canvasView.zoomScale)
+        } else {
+            contentHeight = canvasView.bounds.height
+        }
+        canvasView.contentSize = CGSize(width: view.bounds.width * canvasView.zoomScale, height: contentHeight)
+    }
+    
     private func updateLevel() {
         note.data.drawing = canvasView.drawing
         let screen = captureCurrentScreen()
@@ -251,9 +275,10 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
         
         let panGestureRecognizer = ZNPanGestureRecognizer { rec in
             self.previewPanGesture(rec, preview, onChanged: { rec in
-                let loc = rec.location(in: self.view)
-                sublevel.frame = CGRect(x: loc.x - sublevel.frame.width / 2,
-                                       y: loc.y - sublevel.frame.height / 2,
+                let loc = rec.location(in: self.canvasView)
+                let relativeLoc = rec.location(in: preview)
+                sublevel.frame = CGRect(x: loc.x,
+                                       y: loc.y,
                                        width: sublevel.frame.width,
                                        height: sublevel.frame.height)
                 self.hasModifiedDrawing = true
@@ -312,6 +337,7 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
 extension NoteViewController : PKCanvasViewDelegate {
     func canvasViewDrawingDidChange(_ canvasView: PKCanvasView) {
         hasModifiedDrawing = true
+        updateContentSizeForDrawing()
     }
     
     func toolPickerFramesObscuredDidChange(_ toolPicker: PKToolPicker) {
