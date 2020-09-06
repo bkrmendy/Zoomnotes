@@ -8,6 +8,7 @@
 
 import UIKit
 import PencilKit
+import SwiftUI
 
 struct ScrollViewState {
     let frame: CGRect
@@ -91,7 +92,19 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
             self.view.addGestureRecognizer(UIPinchGestureRecognizer(target: self, action: #selector(onPreviewZoomUp(_:))))
             
             if self.drawerView == nil {
-                self.drawerView = DrawerView(in: self.view, title: .constant("Title"))
+                self.drawerView = DrawerView(in: self.view) {
+                    HStack {
+                        TextField("Note Title", text: .constant("Title"))
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                        Button(action: {
+                            self.imagePickerTransition()
+                        }, label: {
+                            Image(systemName: "camera")
+                        })
+                        Spacer()
+                    }
+                    .background(Color.white.opacity(0.0))
+                }
             }
 
             self.view.addSubview(drawerView!)
@@ -221,6 +234,44 @@ class NoteViewController : UIViewController, UIGestureRecognizerDelegate {
             $0.moveSublevel(sublevel: sublevel, from: to, to: from)
         }
         self.undoManager?.setActionName("MoveSublevel")
+    }
+    
+    private func imagePickerTransition() {
+        UIView.animate(withDuration: 0.1, animations: {
+            guard let drawerView = self.drawerView else { return }
+            drawerView.frame = CGRect(x: drawerView.frame.minX,
+                                      y: self.view.frame.height,
+                                      width: drawerView.frame.width,
+                                      height: drawerView.frame.height)
+        }, completion: { _ in
+            let baseFrame = CGRect(x: 0,
+                                    y: self.view.frame.height,
+                                    width: self.view.frame.width,
+                                    height: self.view.frame.height / 3)
+            var picker = ZNPhotoPicker()
+            let photoPickerVC = UIHostingController(rootView: picker)
+            
+            picker.onDismiss = {
+                UIView.animate(withDuration: 0.1,
+                               animations: {
+                                photoPickerVC.view.frame = baseFrame
+                }, completion: { _ in
+                    photoPickerVC.remove()
+                })
+            }
+
+            self.add(photoPickerVC)
+            photoPickerVC.view.frame = CGRect(x: 0,
+                                            y: self.view.frame.height,
+                                            width: self.view.frame.width,
+                                            height: self.view.frame.height / 3)
+            UIView.animate(withDuration: 0.1) {
+                photoPickerVC.view.frame = CGRect(x: 0,
+                                                  y: self.view.frame.height - self.view.frame.height / 3,
+                                                  width: self.view.frame.width,
+                                                  height: self.view.frame.height / 3)
+            }
+        })
     }
 
     private func onPreviewZoomDown(_ rec: ZNPinchGestureRecognizer, _ note: NoteModel.NoteLevel) {

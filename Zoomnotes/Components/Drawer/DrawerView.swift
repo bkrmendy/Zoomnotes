@@ -14,17 +14,8 @@ protocol DrawerViewDelegate {
     func noteNameChanged(to: String)
 }
 
-class DrawerView : UIView {
-    
-    enum State {
-        case hidden
-        case partiallyOpen
-        case fullyOpen
-    }
-    
+class DrawerView<Content: View> : UIView {
     private let offset: CGFloat = 50
-    
-    private let title: Binding<String>
     
     private func panGesture(with view: UIView) -> ZNPanGestureRecognizer {
         let baseFrame = CGRect(x: 0,
@@ -86,44 +77,28 @@ class DrawerView : UIView {
         }
     }
     
-    private func titleTextField() -> UITextField {
-        let textField = UITextField(frame: CGRect(x: 10, y: 10, width: 200, height: 30))
-        
-        textField.delegate = self
-
-        textField.addTarget(self, action: #selector(onTextField(_:)), for: .valueChanged)
-
-        textField.placeholder = "Note Title"
-        textField.text = title.wrappedValue
-        textField.returnKeyType = .done
-        textField.clearButtonMode = .whileEditing
-        textField.backgroundColor = UIColor.systemGray6
-        textField.layer.borderColor = UIColor.systemGray6.cgColor
-        textField.borderStyle = .roundedRect
-        
-        return textField
-    }
-    
-    init(in view: UIView, title: Binding<String>) {
+    init(in view: UIView, @ViewBuilder accessories: () -> Content) {
         let baseFrame = CGRect(x: 0,
                                y: view.frame.height - offset,
                                width: view.frame.width,
                                height: view.frame.height / 2)
 
-        self.title = title
-
         super.init(frame: baseFrame)
+        
+        self.layer.masksToBounds = true
+        self.layer.cornerRadius = 20
         
         self.frame = baseFrame
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        self.layer.cornerRadius = 30
-        
         let blurView = UIVisualEffectView(effect: UIBlurEffect(style: .prominent))
         blurView.frame = self.bounds
         self.addSubview(blurView)
+                
+        let accessoriesView = UIHostingController(rootView: accessories()).view!
+        accessoriesView.frame = CGRect(x: 10, y: 10, width: view.frame.width - 20, height: 50)
         
-        self.addSubview(titleTextField())
+        self.addSubview(accessoriesView)
         
         self.addGestureRecognizer(panGesture(with: view))
         self.addGestureRecognizer(swipeUpGesture(with: view))
@@ -139,10 +114,6 @@ class DrawerView : UIView {
                        name: UIResponder.keyboardWillHideNotification,
                        object: nil)
         
-    }
-    
-    @objc func onTextField(_ sender: UITextField) {
-        self.title.wrappedValue = sender.text ?? "Untitled"
     }
     
     @objc func keyboardWillChangeFrame(notification: Notification) {
@@ -168,13 +139,5 @@ class DrawerView : UIView {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension DrawerView : UITextFieldDelegate {
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        
-        return true
     }
 }
