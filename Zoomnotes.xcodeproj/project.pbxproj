@@ -24,6 +24,8 @@
 		31074D7A251E2BA400F8A11D /* DirectoryAccessMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31074D79251E2BA400F8A11D /* DirectoryAccessMock.swift */; };
 		310A5C6D24F40A44006394A0 /* ZNPanGestureRecognizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310A5C6C24F40A44006394A0 /* ZNPanGestureRecognizer.swift */; };
 		310A5C6F24F411F1006394A0 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310A5C6E24F411F1006394A0 /* UIImage.swift */; };
+		310E6942259209190063088A /* LWWRegister.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310E6941259209190063088A /* LWWRegister.swift */; };
+		310E694A259209A50063088A /* AddRemoveElementSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310E6949259209A50063088A /* AddRemoveElementSet.swift */; };
 		310F03B72510095B000CF0F0 /* FileBrowserDBReadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F03B62510095B000CF0F0 /* FileBrowserDBReadingTests.swift */; };
 		310F03B9251009A6000CF0F0 /* FileBrowserDBAccessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F03B8251009A6000CF0F0 /* FileBrowserDBAccessTests.swift */; };
 		310F03D32510DF1D000CF0F0 /* ManagedContext+inMemory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 310F03D22510DF1D000CF0F0 /* ManagedContext+inMemory.swift */; };
@@ -133,6 +135,8 @@
 		31074D79251E2BA400F8A11D /* DirectoryAccessMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryAccessMock.swift; sourceTree = "<group>"; };
 		310A5C6C24F40A44006394A0 /* ZNPanGestureRecognizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZNPanGestureRecognizer.swift; sourceTree = "<group>"; };
 		310A5C6E24F411F1006394A0 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		310E6941259209190063088A /* LWWRegister.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LWWRegister.swift; sourceTree = "<group>"; };
+		310E6949259209A50063088A /* AddRemoveElementSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddRemoveElementSet.swift; sourceTree = "<group>"; };
 		310F03B62510095B000CF0F0 /* FileBrowserDBReadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserDBReadingTests.swift; sourceTree = "<group>"; };
 		310F03B8251009A6000CF0F0 /* FileBrowserDBAccessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserDBAccessTests.swift; sourceTree = "<group>"; };
 		310F03D22510DF1D000CF0F0 /* ManagedContext+inMemory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ManagedContext+inMemory.swift"; sourceTree = "<group>"; };
@@ -262,6 +266,7 @@
 		3101752C24E5211D007D3589 /* Zoomnotes */ = {
 			isa = PBXGroup;
 			children = (
+				310E69402592090A0063088A /* db */,
 				3101756624E530D1007D3589 /* Components */,
 				3101756324E52FDE007D3589 /* Utils */,
 				31AD9BBD25052E9E00C193CF /* ViewModels */,
@@ -375,6 +380,15 @@
 				31D6648E24ED1D470062AF8D /* NoteLevelPreview.swift */,
 			);
 			path = NotePreview;
+			sourceTree = "<group>";
+		};
+		310E69402592090A0063088A /* db */ = {
+			isa = PBXGroup;
+			children = (
+				310E6941259209190063088A /* LWWRegister.swift */,
+				310E6949259209A50063088A /* AddRemoveElementSet.swift */,
+			);
+			path = db;
 			sourceTree = "<group>";
 		};
 		310F03CF2510DE03000CF0F0 /* FileBrowser */ = {
@@ -816,6 +830,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				312820D624F826EF00338E28 /* DrawerView.swift in Sources */,
+				310E694A259209A50063088A /* AddRemoveElementSet.swift in Sources */,
 				31074D7A251E2BA400F8A11D /* DirectoryAccessMock.swift in Sources */,
 				31CD520D251CF7B700561D27 /* DocumentStoreDescription+stub.swift in Sources */,
 				31B68FFD2534EAFF004619EC /* Types.swift in Sources */,
@@ -851,6 +866,7 @@
 				310A5C6D24F40A44006394A0 /* ZNPanGestureRecognizer.swift in Sources */,
 				314CA957252E06AD00FE9B73 /* ImageDetailViewModel.swift in Sources */,
 				31D6648F24ED1D470062AF8D /* NoteLevelPreview.swift in Sources */,
+				310E6942259209190063088A /* LWWRegister.swift in Sources */,
 				313BFDF42520BC5500EBF70F /* NoteLevelAccess.swift in Sources */,
 				31F2FB992548D83000735258 /* Logevents.swift in Sources */,
 				31362A5B24F83F410002FD98 /* ZNSwipeGesturerecognizer.swift in Sources */,
