@@ -1,4 +1,7 @@
 PODS:
+  - GRDB.swift (5.2.0):
+    - GRDB.swift/standard (= 5.2.0)
+  - GRDB.swift/standard (5.2.0)
   - Introspect (0.1.0)
   - MarqueeLabel (4.0.5)
   - NotificationBannerSwift (3.0.2):
@@ -11,6 +14,7 @@ PODS:
   - Willow (5.2.1)
 
 DEPENDENCIES:
+  - GRDB.swift
   - Introspect
   - NotificationBannerSwift (~> 3.0.0)
   - PrediKit
@@ -21,6 +25,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - GRDB.swift
     - Introspect
     - MarqueeLabel
     - NotificationBannerSwift
@@ -31,6 +36,7 @@ SPEC REPOS:
     - Willow
 
 SPEC CHECKSUMS:
+  GRDB.swift: f44f61fd032e176e3aadb1f70e15656dc50ca018
   Introspect: ad32f2b7b9e7ac2c008b9dfec3d5325fbd3660fa
   MarqueeLabel: 00cc0bcd087111dca575878b3531af980559707d
   NotificationBannerSwift: 713e20f21b6105f4a36a00e5d9fa414a930d3d8e
@@ -40,6 +46,6 @@ SPEC CHECKSUMS:
   SwiftLint: bbfed21bf4451dcbd0f5cdbee44a18e06cf91b12
   Willow: a6310f9aedcb6f4de8c35b94fd3416a660ae9280
 
-PODFILE CHECKSUM: 20f717f06bd569edc1e97dbf9df1e2ae47e8bc4c
+PODFILE CHECKSUM: 3f9f02c9f855ad81c31de23854d2745462b1bf04
 
 COCOAPODS: 1.8.4

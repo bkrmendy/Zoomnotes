@@ -13,6 +13,7 @@ target 'Zoomnotes' do
   pod 'SnapKit', '~> 5.0.0'
   pod 'Willow', '~> 5.0'
   pod 'NotificationBannerSwift', '~> 3.0.0'
+  pod 'GRDB.swift'
 
   target 'ZoomnotesTests' do
     inherit! :search_paths
