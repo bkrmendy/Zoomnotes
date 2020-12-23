@@ -7,10 +7,8 @@
 //
 
 import Foundation
+import GRDB
 
-protocol AddRemoveElementSet {
-    associatedtype Value
-    func `assert`(entity: UUID, value: Value)
-    func retract(entity: UUID, value: Value)
-    func get(for entity: UUID) -> [Value]
+protocol AddRemoveElementSet: Column {
+    func get(db: DatabaseQueue, for entity: UUID) throws -> [Value]
 }

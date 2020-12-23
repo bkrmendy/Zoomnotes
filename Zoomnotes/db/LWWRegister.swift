@@ -7,10 +7,12 @@
 //
 
 import Foundation
+import GRDB
 
-protocol LWWRegister {
-    associatedtype Value
-    func `assert`(entity: UUID, value: Value)
-    func retract(entity: UUID, value: Value)
-    func get(for entity: UUID) -> Value?
+protocol LWWRegister: Column {
+    typealias TieBreakFn = (Value, Value) -> Value
+
+    var tieBreak: TieBreakFn { get }
+
+    func get(db: DatabaseQueue, for entity: UUID) throws -> Value?
 }
